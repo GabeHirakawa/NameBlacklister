@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="NameBlacklister">
+    <output-path>$PROJECT_DIR$/out/artifacts/NameBlacklister</output-path>
+    <root id="archive" name="NameBlacklister.jar">
+      <element id="module-output" name="NameBlacklister" />
+      <element id="library" level="project" name="Sprummlbot" />
+    </root>
+  </artifact>
+</component>
