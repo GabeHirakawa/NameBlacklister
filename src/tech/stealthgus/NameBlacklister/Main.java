@@ -76,13 +76,16 @@ public class Main extends SprummlbotPlugin {
                 String[] badNames = names.getAll("name", String[].class);
                 for (Client i : getAPI().getClients().getUninterruptibly()){
                     for (String name : badNames){
-                        if (name.equals("")) {
+                        if (!name.equals("")) {
                             if (e.getClientNickname().contains(name)) {
                                 getAPI().kickClientFromServer(kickMessage + " " + name, i.getId());
                                 if (debug) {
                                     System.out.println("[NameBlacklister] Kicking user" + e.getClientNickname() + " due to having an illegal username");
                                 }
                             }
+                        }
+                        else {
+                        	System.out.println("[NameBlacklister] SEVERE: Caught error where the name varriable is blank CONSIDER FIXING");
                         }
                     }
                 }
@@ -100,10 +103,15 @@ public class Main extends SprummlbotPlugin {
         }
         for (Client i : getAPI().getClients().getUninterruptibly()){
             for (String name : blacklistNames){
-                if (name.equals("")) {
+                if (!name.equals("")) {
                     if (i.getNickname().contains(name)) {
                         getAPI().kickClientFromServer(kickMessage + " " + name, i.getId());
                     }
+                }
+                else {
+                	if (debug){
+                		System.out.println("[NameBlacklister] SEVERE: Caught error where the name varriable is blank CONSIDER FIXING");
+                	}
                 }
             }
         }
