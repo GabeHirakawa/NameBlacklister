@@ -11,6 +11,8 @@ import org.ini4j.Profile;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.RunnableFuture;
+import java.util.concurrent.TimeUnit;
 
 
 public class Main extends SprummlbotPlugin {
@@ -31,7 +33,7 @@ public class Main extends SprummlbotPlugin {
         defaultSec.put("timer", "60");
         defaultSec.putComment("debug", "See what the plugin is doing");
         defaultSec.put("debug", false);
-        nameSec.putComment("name", "If client's username CONTAINS the following string, they will be punished. WARNING SETTING THIS TO BLANK WILL KICK ALL USERS.");
+        nameSec.putComment("name", "If client's username CONTAINS the following string, they will be punished. WARNING SETTING THIS TO BLANK MAY KICK ALL USERS.");
         nameSec.put("name", "RANDOMSTRING");
         conf.setDefaultConfig(defaultIni);
         try {
@@ -48,24 +50,24 @@ public class Main extends SprummlbotPlugin {
         final Boolean debug = settings.get("debug", Boolean.class);
         final Integer timelimit = settings.get("timer", Integer.class);
         final String kickMessage = settings.get("kickMessage", String.class);
-        Timer timer = new Timer();
-        final TimerTask nameCheck = new TimerTask() {
+        getTasker().createScheduledTimerRunnable(new Runnable() {
             @Override
             public void run() {
                 nameCheck(names.getAll("name", String[].class));
             }
-        };
-        timer.scheduleAtFixedRate(nameCheck, 0, timelimit*1000);
+        }, 0, timelimit, TimeUnit.SECONDS);
         getEventManager().addEventListener(new ClientJoinEventHandler() {
             @Override
             public void handleEvent(ClientJoinEvent e) {
                 String[] badNames = names.getAll("name", String[].class);
                 for (Client i : getAPI().getClients().getUninterruptibly()){
                     for (String name : badNames){
-                        if (e.getClientNickname().contains(name)){
-                            getAPI().kickClientFromServer(kickMessage + " " + name, e.getClientId());
-                            if (debug) {
-                                System.out.println("[NameBlacklister] Kicking user" + e.getClientNickname() + " due to having an illegal username");
+                        if (name.equals("")) {
+                            if (e.getClientNickname().contains(name)) {
+                                getAPI().kickClientFromServer(kickMessage + " " + name, i.getId());
+                                if (debug) {
+                                    System.out.println("[NameBlacklister] Kicking user" + e.getClientNickname() + " due to having an illegal username");
+                                }
                             }
                         }
                     }
@@ -84,8 +86,10 @@ public class Main extends SprummlbotPlugin {
         }
         for (Client i : getAPI().getClients().getUninterruptibly()){
             for (String name : blacklistNames){
-                if (i.getNickname().contains(name)){
-                    getAPI().kickClientFromServer(kickMessage + " " + name, i.getId());
+                if (name.equals("")) {
+                    if (i.getNickname().contains(name)) {
+                        getAPI().kickClientFromServer(kickMessage + " " + name, i.getId());
+                    }
                 }
             }
         }
