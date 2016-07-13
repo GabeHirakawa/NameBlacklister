@@ -85,7 +85,7 @@ public class Main extends SprummlbotPlugin {
                             }
                         }
                         else {
-                        	System.out.println("[NameBlacklister] SEVERE: Caught error where the name varriable is blank CONSIDER FIXING");
+                            System.out.println("[NameBlacklister] SEVERE: Caught error where the name varriable is blank CONSIDER FIXING");
                         }
                     }
                 }
@@ -109,9 +109,9 @@ public class Main extends SprummlbotPlugin {
                     }
                 }
                 else {
-                	if (debug){
-                		System.out.println("[NameBlacklister] SEVERE: Caught error where the name varriable is blank CONSIDER FIXING");
-                	}
+                    if (debug){
+                        System.out.println("[NameBlacklister] SEVERE: Caught error where the name varriable is blank CONSIDER FIXING");
+                    }
                 }
             }
         }
